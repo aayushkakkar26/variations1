@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Reimagine</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body>
+    <div id="container">
+        <h1>Image Variations</h1>
+
+        <form method="POST" enctype="multipart/form-data" id="uploadForm">
+            <input type="file" id = "file" name="file" accept=".png, .jpg, .jpeg, .webp" required onchange="previewImage()">
+            <button type="button" onclick="reimagineImage()">Reimagine</button>
+        </form>
+
+        <div id="imagePreview" style="display: none;">
+            <h2 >Original Image</h2>
+            <div class="image-container" id="originalImageContainer">
+
+                <img id="originalImage" alt="Original Image">
+            </div>
+
+           
+        </div>
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <ul>
+            {% for message in messages %}
+            <li style="color: red;">{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% endwith %}
+    </div>
+
+
+    <script>
+        function previewImage() {
+            const input = document.querySelector('input[type="file"]');
+            const preview = document.getElementById('imagePreview');
+            const originalImage = document.getElementById('originalImage');
+
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    originalImage.src = e.target.result;
+                };
+
+                reader.readAsDataURL(input.files[0]);
+
+                preview.style.display = 'block';
+                document.getElementById('variationsContainer').innerHTML = ''; // Clear previous variation images
+            }
+        }
+
+        function reimagineImage() {
+            document.getElementById('uploadForm').submit();
+        }
+    </script>
+</body>
+
+</html>
